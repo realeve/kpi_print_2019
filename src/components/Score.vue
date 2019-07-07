@@ -6,30 +6,29 @@
       stripe
       style="width: 100%"
     >
-      <el-table-column
-        prop="userType"
-        label="类型"
+      <!-- <el-table-column
+        prop="dpt"
+        label="岗位"
       >
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="username"
         label="姓名"
       >
       </el-table-column>
       <el-table-column
-        v-if="type==0"
-        prop="dpt"
-        label="部门"
-      >
-      </el-table-column>
-      <el-table-column
         prop="leader"
-        label="领导打分"
+        label="领导评分"
       >
       </el-table-column>
       <el-table-column
         prop="other"
         label="互评得分"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="customer"
+        label="客户得分"
       >
       </el-table-column>
     </el-table>
@@ -40,14 +39,19 @@
       class="margin-top-20"
       style="width: 100%"
     >
-      <el-table-column
-        prop="userType"
-        label="类型"
+      <!-- <el-table-column
+        prop="dpt"
+        label="岗位"
       >
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="username"
         label="姓名"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="scoreType"
+        label="评分类型"
       >
       </el-table-column>
       <el-table-column
@@ -57,18 +61,13 @@
       >
       </el-table-column>
       <el-table-column
-        prop="score3"
-        label="不称职"
-      >
-      </el-table-column>
-      <el-table-column
         prop="score5"
-        label="基本称职"
+        label="较差"
       >
       </el-table-column>
       <el-table-column
         prop="score7"
-        label="称职"
+        label="较好"
       >
       </el-table-column>
       <el-table-column
@@ -113,14 +112,16 @@ export default {
   },
   methods: {
     refresh() {
-      db.getCbpcPerformance(this.$store.state.voteType).then(({ data }) => {
-        this.tableData = data;
-        this.$message({
-          message: "数据刷新完毕",
-          type: "success"
-        });
-      });
-      db.getCbpcPerformanceDetail(this.$store.state.voteType).then(
+      db.getCbpcPerformancePrint(this.$store.state.voteType).then(
+        ({ data }) => {
+          this.tableData = data;
+          this.$message({
+            message: "数据刷新完毕",
+            type: "success"
+          });
+        }
+      );
+      db.getCbpcPerformanceDetailPrint(this.$store.state.voteType).then(
         ({ data }) => {
           this.distribData = data;
           this.$message({

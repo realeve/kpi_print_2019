@@ -55,11 +55,35 @@ export const getCbpcPerformance = (sid) =>
   });
 /**
  *   @database: { 微信开发 }
+ *   @desc:     { 绩效得分查看 }
+ */
+export const getCbpcPerformancePrint = (sid) =>
+  axios({
+    url: '/188/36e0aafbbf.json',
+    params: {
+      sid
+    }
+  });
+
+/**
+ *   @database: { 微信开发 }
  *   @desc:     { 绩效_得分明细 }
  */
 export const getCbpcPerformanceDetail = (sid) =>
   axios({
     url: '/157/0e9de788d8.json',
+    params: {
+      sid
+    }
+  });
+
+/**
+ *   @database: { 微信开发 }
+ *   @desc:     { 绩效评分详情 }
+ */
+export const getCbpcPerformanceDetailPrint = (sid) =>
+  axios({
+    url: '/189/b6f38a68cd.json',
     params: {
       sid
     }
