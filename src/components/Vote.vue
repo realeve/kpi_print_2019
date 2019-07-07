@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h2 class="title">{{title}}</h2>
-    <div class="content">说明：本轮最多评选{{limitSetting.excellent}}位优秀，{{limitSetting.good}}位良好。</div>
+    <h2 class="title">{{title}} {{isLeader=='0'?'互评':'领导评分'}}</h2>
     <div>
       <div
         v-for="(user,idx) in users"
@@ -23,12 +22,19 @@
                 :texts="scoreList"
                 :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
                 show-text
+                :max="4"
+                :icon-classes="iconClasses"
+                void-icon-class="icon-rate-face-off"
               >
               </el-rate>
             </div>
-            <p class="votenum">优秀:
-              <span :class="{'warnning':warn.excellent}">{{curLimit.excellent}}</span> /{{limitSetting.excellent}},良好:
-              <span :class="{'warnning':warn.good}">{{curLimit.good}}</span>/{{limitSetting.good}}</p>
+            <!-- /{{limitSetting.excellent}}
+             /{{limitSetting.good}} -->
+
+            <p class="votenum">
+              优秀:<span :class="{'warnning':warn.excellent}">{{curLimit.excellent}}</span>,
+              良好:<span :class="{'warnning':warn.good}">{{curLimit.good}}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -52,14 +58,15 @@ import userList from "../assets/js/userList";
 import app from "../assets/js/common";
 import * as db from "../assets/js/db";
 
-// const isGM = app.getUrlParam("gm") !== null ? 1 : 0;
-// console.log(isGM);
+// const userType = app.getUrlParam("gm") !== null ? 1 : 0;
+// console.log(userType);
 let vote = {
   name: "vote",
   data() {
     return {
       title: "",
-      scoreList: ["不称职", "基本称职", "称职", "良好", "优秀"],
+      iconClasses: ["icon-rate-face-1", "icon-rate-face-2", "icon-rate-face-3"],
+      scoreList: ["较差", "较好", "良好", "优秀"],
       limitSetting: {
         excellent: 0,
         good: 0
@@ -81,6 +88,9 @@ let vote = {
         excellent: this.curLimit.excellent > this.limitSetting.excellent,
         good: this.curLimit.good > this.limitSetting.good
       };
+    },
+    isLeader() {
+      return this.$store.state.userType || "0";
     },
     showDesc() {
       return this.$store.state.voteType == 0;
@@ -116,7 +126,7 @@ let vote = {
         dpt: item.dpt,
         score: rate2Score[item.value],
         usertype: this.title,
-        isgm: this.$store.state.isgm,
+        isgm: this.$store.state.userType,
         sportid: this.$store.state.voteType,
         votedate: dateName,
         votetime: voteTime
@@ -157,24 +167,25 @@ let vote = {
     users: {
       handler() {
         this.$store.state.curLimit = this.$store.getters.scoreLimit;
-        if (this.warn.excellent) {
-          this.$message({
-            message: "最多只允许选取" + this.limitSetting.excellent + "名优秀",
-            type: "error"
-          });
-        }
-        if (this.warn.good) {
-          this.$message({
-            message: "最多只允许选取" + this.limitSetting.good + "名良好",
-            type: "error"
-          });
-        }
+        // if (this.warn.excellent) {
+        //   this.$message({
+        //     message: "最多只允许选取" + this.limitSetting.excellent + "名优秀",
+        //     type: "error"
+        //   });
+        // }
+        // if (this.warn.good) {
+        //   this.$message({
+        //     message: "最多只允许选取" + this.limitSetting.good + "名良好",
+        //     type: "error"
+        //   });
+        // }
       },
       deep: true
     }
   },
   beforeMount() {
     let userInfo = userList(this.$route.params.id, this.$store.state.voteType);
+
     this.$store.state.users = userInfo.data;
     this.title = userInfo.title;
     this.limitSetting = userInfo.limit;
@@ -185,4 +196,5 @@ export default vote;
 
 <style lang="less">
 @import "../less/vote.less";
+@import "../less/rate.less";
 </style>

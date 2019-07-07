@@ -36,3 +36,41 @@ export const getCbpcPerformanceDetail = (sid) =>
       sid
     }
   });
+
+/**
+*   @database: { 微信开发 }
+*   @desc:     { 客户满意度评分用户登录 } 
+    const { username, card_no } = params;
+*/
+export const getCbpcUserList = (params) =>
+  axios({
+    url: '/184/d61e2a8b11.json',
+    params
+  });
+
+// update
+// 	`tbl_cbpc_user_list`  set provider = 1
+// WHERE
+// 	username IN ( '胡新玥', '蒲明玥', '李宾', '朱振华', '潘成', '张立力', '杨林', '马可', '冯诗伟', '任礼科', '李超群', '蒋荣' ) and dept_id=6;
+
+// update
+// 	`tbl_cbpc_user_list`  set customer = 1
+// WHERE
+// 	username IN ( '秦鹏','杨波','唐永明','袁长虹','谢清松','刘天亮','黄小平','彭俊林' )
+
+// update
+// 	`tbl_cbpc_user_list`  set customer = 1
+// WHERE
+// 	username IN ('朱江','郑强','郑昭辉','张洪','党委','游泳','丁波','吉晓辉','陈红志','祖波')  and dept_id=18
+
+/**
+ *   @database: { 微信开发 }
+ *   @desc:     { 参评用户列表 }
+ */
+export const getCbpcUserListByDept = (provider) =>
+  axios({
+    url: '/185/8757527d72.json',
+    params: {
+      provider
+    }
+  });

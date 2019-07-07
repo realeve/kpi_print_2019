@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="title">月度绩效测评</h2>
+    <h2 class="title">月度绩效测评({{isLeader=='0'?'互评':'领导评分'}})</h2>
     <div class="list">
       <el-steps
         :space="100"
@@ -29,11 +29,16 @@
 import ElFooter from "./Footer";
 import app from "../assets/js/common";
 const dateName = app.getDate();
-let needCheck = app.getUrlParam("check");
-needCheck = needCheck !== null ? 1 : 0;
+
+// let needCheck = app.getUrlParam("check");
+// needCheck = needCheck !== null ? 1 : 0;
+
 let home = {
   name: "home",
   computed: {
+    isLeader() {
+      return this.$store.state.userType || "0";
+    },
     taskList() {
       return this.$store.state.taskList;
     },
@@ -49,7 +54,7 @@ let home = {
   },
   mounted() {
     console.log(this.$store.state.voteType);
-    console.log(this.$store.state.isgm);
+    console.log(this.$store.state.userType);
   },
   methods: {
     location(idx) {

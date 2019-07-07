@@ -2,7 +2,7 @@ import { user as cbpc } from './listCBPC';
 import { user as paper } from './listPaper';
 import { user as print } from './listPrint';
 const userList = (type, voteType) => {
-  const DEFAULT_SCORE = 3;
+  const DEFAULT_SCORE = 2;
 
   const arr = [cbpc, paper, print][voteType];
 

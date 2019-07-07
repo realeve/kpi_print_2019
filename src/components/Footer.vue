@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <p>本程序为无记名投票,
-      <a href="https://github.com/cbpc/performance2016">源代码</a>开源至github.</p>
+      <a href="https://github.com/realeve/kpi_print_2019">源代码</a>开源至github.</p>
     <p
       class="copyright"
       v-html="message"

@@ -14,7 +14,7 @@ Vue.use(ElementUI);
 import home from './components/Home';
 import vote from './components/Vote';
 import score from './components/Score';
-
+import login from './components/Login';
 //VUEX数据
 import store from './store';
 
@@ -37,6 +37,11 @@ const routes = [
     path: '/vote',
     component: vote,
     name: 'vote/0'
+  },
+  {
+    path: '/login',
+    component: login,
+    name: 'login'
   },
   {
     path: '/score',
