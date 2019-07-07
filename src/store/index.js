@@ -19,7 +19,9 @@ let voteType = app.getUrlParam('type');
 
 voteType =
   voteType == null ? deptList[defaultDept] : Number.parseInt(voteType, 10);
-let userType = app.getUrlParam('usertype') !== null ? 1 : app.getUrlParam('gm');
+
+let userTypeStr = app.getUrlParam('usertype');
+let userType = userTypeStr !== null ? 1 : userTypeStr || 0;
 
 // http://localhost:8080/#/vote/0/1&usertype=1
 
@@ -59,7 +61,11 @@ const getters = {
 
 export default new Vuex.Store({
   state,
-  // mutations,
+  mutations: {
+    updateCustom(state, custom) {
+      state.custom = custom;
+    }
+  },
   // actions,
   getters
 });

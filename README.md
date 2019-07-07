@@ -14,3 +14,12 @@ npm run dev
 # 编译生成
 npm run build
 ```
+
+
+# 链接
+
+领导评分：http://localhost:8080/#/?usertype=2
+互评： http://localhost:8080/#/
+客户评分： http://localhost:8080/#/login
+
+得分汇总：http://localhost:8080/#/score

@@ -14,6 +14,34 @@ export const addCbpcPerformance = (values) =>
     }
   });
 
+/** 数据量较大时建议使用post模式：
+ *
+ *   @database: { 微信开发 }
+ *   @desc:     { 批量印钞管理部门绩效评价 } */
+export const addCbpcPerformancePrint = (values) =>
+  axios({
+    method: 'post',
+    data: {
+      values,
+      id: 187,
+      nonce: 'f3fd19a183'
+    }
+  });
+
+/** 数据量较大时建议使用post模式：
+ *
+ *   @database: { 微信开发 }
+ *   @desc:     { 批量客户满意度投票 } */
+export const addCbpcPerformanceByCustomer = (values) =>
+  axios({
+    method: 'post',
+    data: {
+      values,
+      id: 186,
+      nonce: '1b3803417c'
+    }
+  });
+
 /**
  *   @database: { 微信开发 }
  *   @desc:     { 绩效_查看得分 }

@@ -52,10 +52,6 @@ let home = {
       return this.$store.state.voteStep;
     }
   },
-  mounted() {
-    console.log(this.$store.state.voteType);
-    console.log(this.$store.state.userType);
-  },
   methods: {
     location(idx) {
       if (idx == this.$store.state.voteStep) {

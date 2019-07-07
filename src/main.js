@@ -15,6 +15,8 @@ import home from './components/Home';
 import vote from './components/Vote';
 import score from './components/Score';
 import login from './components/Login';
+import customer from './components/Customer';
+
 //VUEX数据
 import store from './store';
 
@@ -42,6 +44,11 @@ const routes = [
     path: '/login',
     component: login,
     name: 'login'
+  },
+  {
+    path: '/customer',
+    component: customer,
+    name: 'customer'
   },
   {
     path: '/score',

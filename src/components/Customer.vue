@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h2 class="title">{{title}} {{isLeader=='0'?'互评':'领导评分'}}</h2>
+    <h2 class="title">{{title}}</h2>
+    <h4 class="desc">请根据机检技术人员在【问题响应及时性】及【解决问题的能力】两个方面客观评价。</h4>
     <div>
       <div
         v-for="(user,idx) in users"
@@ -9,13 +10,9 @@
         <div class="card">
           <div class="card-header">
             <span>{{idx+1}}</span>.{{user.name}}
-            <span class="depart">{{user.dpt}}</span>
+            <span class="depart">{{user.dept}}</span>
           </div>
           <div class="card-content">
-            <p
-              class="desc"
-              v-if="showDesc"
-            >{{user.desc}}</p>
             <div class="vote">
               <el-rate
                 v-model="user.value"
@@ -28,12 +25,10 @@
               >
               </el-rate>
             </div>
-            <!-- /{{limitSetting.excellent}}
-             /{{limitSetting.good}} -->
 
             <p class="votenum">
-              优秀:<span :class="{'warnning':warn.excellent}">{{curLimit.excellent}}</span>,
-              良好:<span :class="{'warnning':warn.good}">{{curLimit.good}}</span>
+              优秀:<span>{{curLimit.excellent}}</span>,
+              良好:<span>{{curLimit.good}}</span>
             </p>
           </div>
         </div>
@@ -44,6 +39,7 @@
           @click="submit"
         >提交</button>
         <button
+          type="default"
           class="button"
           @click="back"
         >返回</button>
@@ -58,16 +54,12 @@ import app from "../assets/js/common";
 import * as db from "../assets/js/db";
 
 let vote = {
-  name: "vote",
+  name: "customer",
   data() {
     return {
       title: "",
       iconClasses: ["icon-rate-face-1", "icon-rate-face-2", "icon-rate-face-3"],
-      scoreList: ["较差", "较好", "良好", "优秀"],
-      limitSetting: {
-        excellent: 0,
-        good: 0
-      }
+      scoreList: ["较差", "较好", "良好", "优秀"]
     };
   },
   computed: {
@@ -80,63 +72,52 @@ let vote = {
     curLimit() {
       return this.$store.state.curLimit;
     },
-    warn() {
-      return {
-        excellent: this.curLimit.excellent > this.limitSetting.excellent,
-        good: this.curLimit.good > this.limitSetting.good
-      };
-    },
-    isLeader() {
-      return this.$store.state.userType || "0";
-    },
     showDesc() {
       return this.$store.state.voteType == 0;
-    },
-    shouldSubmit() {
-      return this.$store.state.voteStep == this.$route.params.id;
-    },
-    hideSubmit() {
-      return this.warn.excellent || this.warn.good;
+    }
+  },
+  watch: {
+    users: {
+      handler() {
+        this.$store.state.curLimit = this.$store.getters.scoreLimit;
+      },
+      deep: true
     }
   },
   methods: {
     back() {
-      this.$router.push("/home");
+      this.$router.push("/login");
     },
     async submit() {
-      if (this.warn.excellent || this.warn.good) {
-        this.$message({
-          message: "优秀或良好人数不符合规定",
-          type: "error"
-        });
-        return;
-      }
-
       let votes = [];
+      // 、较差、较好、良好、优秀
       let rate2Score = [0, 4, 6, 8, 10];
       const dateName = app.getDate();
       const voteTime = app.getDate(1);
       //姓名，部门，得分，用户身份，是否领导评分，活动id，投票日期,提交时间
       votes = this.$store.state.users.map(item => ({
         user: item.name,
-        dpt: item.dpt,
+        dpt: "机检建模",
         score: rate2Score[item.value],
-        usertype: this.title,
-        isgm: this.$store.state.userType,
+        usertype: this.title.slice(0, 5),
+        isgm: 2, // 客户评价
         sportid: this.$store.state.voteType,
         votedate: dateName,
-        votetime: voteTime
+        votetime: voteTime,
+        uid: this.$store.state.custom.uid
       }));
+      // console.log(votes);
+      // return;
 
       let {
         data: [res]
-      } = await db.addCbpcPerformancePrint(votes).catch(e => {
+      } = await db.addCbpcPerformanceByCustomer(votes).catch(e => {
         this.$message({
           message: "数据提交失败",
           type: "error"
         });
-        console.log(e);
       });
+
       if (res.affected_rows == 0) {
         this.$message({
           message: "数据提交失败",
@@ -158,20 +139,28 @@ let vote = {
       this.$store.state.voteStep = this.$store.state.voteStep + 1;
     }
   },
-  watch: {
-    users: {
-      handler() {
-        this.$store.state.curLimit = this.$store.getters.scoreLimit;
-      },
-      deep: true
-    }
-  },
   beforeMount() {
-    let userInfo = userList(this.$route.params.id, this.$store.state.voteType);
-    console.log(userInfo);
+    let custom = this.$store.state.custom;
+    if (custom.dept_id == 0) {
+      this.$router.push({
+        name: "login"
+      });
+      return;
+    }
+
+    // 转换数据
+    let userInfo = {
+      limit: {},
+      data: custom.users.map(name => ({
+        value: 2,
+        desc: "",
+        dept: custom.providerName,
+        name
+      })),
+      title: custom.providerName + "客户满意度评价"
+    };
     this.$store.state.users = userInfo.data;
     this.title = userInfo.title;
-    this.limitSetting = userInfo.limit;
   }
 };
 export default vote;
@@ -180,4 +169,11 @@ export default vote;
 <style lang="less">
 @import "../less/vote.less";
 @import "../less/rate.less";
+.title {
+  font-size: 22px;
+}
+.desc {
+  font-weight: 200;
+  font-size: 14px;
+}
 </style>
