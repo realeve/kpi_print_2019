@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="title">{{title}}</h2>
-    <h4 class="desc">请根据机检技术人员在【问题响应及时性】及【解决问题的能力】两个方面客观评价。</h4>
+    <h4 class="desc">请根据机检技术人员在服务态度、响应时间、业务能力三个方面评价。</h4>
     <div>
       <div
         v-for="(user,idx) in users"
@@ -14,22 +14,54 @@
           </div>
           <div class="card-content">
             <div class="vote">
-              <el-rate
-                v-model="user.value"
-                :texts="scoreList"
-                :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                show-text
-                :max="4"
-                :icon-classes="iconClasses"
-                void-icon-class="icon-rate-face-off"
-              >
-              </el-rate>
-            </div>
+              <div class="title">
+                <span class="type">服务态度</span>
+                <el-rate
+                  v-model="user.attitude"
+                  :texts="scoreList"
+                  :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                  show-text
+                  :max="4"
+                  :icon-classes="iconClasses"
+                  void-icon-class="icon-rate-face-off"
+                >
+                </el-rate>
+              </div>
 
+              <div class="title">
+                <span class="type">响应时间</span>
+                <el-rate
+                  v-model="user.response"
+                  :texts="scoreList"
+                  :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                  show-text
+                  :max="4"
+                  :icon-classes="iconClasses"
+                  void-icon-class="icon-rate-face-off"
+                >
+                </el-rate>
+              </div>
+
+              <div class="title">
+                <span class="type">业务能力</span>
+                <el-rate
+                  v-model="user.power"
+                  :texts="scoreList"
+                  :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                  show-text
+                  :max="4"
+                  :icon-classes="iconClasses"
+                  void-icon-class="icon-rate-face-off"
+                >
+                </el-rate>
+              </div>
+
+            </div>
+            <!-- 
             <p class="votenum">
               优秀:<span>{{curLimit.excellent}}</span>,
               良好:<span>{{curLimit.good}}</span>
-            </p>
+            </p> -->
           </div>
         </div>
       </div>
@@ -69,21 +101,21 @@ let vote = {
     voteStep() {
       return this.$store.state.voteStep;
     },
-    curLimit() {
-      return this.$store.state.curLimit;
-    },
+    // curLimit() {
+    //   return this.$store.state.curLimit;
+    // },
     showDesc() {
       return this.$store.state.voteType == 0;
     }
   },
-  watch: {
-    users: {
-      handler() {
-        this.$store.state.curLimit = this.$store.getters.scoreLimit;
-      },
-      deep: true
-    }
-  },
+  // watch: {
+  //   users: {
+  //     handler() {
+  //       this.$store.state.curLimit = this.$store.getters.scoreLimit;
+  //     },
+  //     deep: true
+  //   }
+  // },
   methods: {
     back() {
       this.$router.push("/login");
@@ -95,10 +127,12 @@ let vote = {
       const dateName = app.getDate();
       const voteTime = app.getDate(1);
       //姓名，部门，得分，用户身份，是否领导评分，活动id，投票日期,提交时间
-      votes = this.$store.state.users.map(item => ({
+      votes = this.$store.state.users.map((item, idx) => ({
         user: item.name,
         dpt: "机检建模",
-        score: rate2Score[item.value],
+        attitude: rate2Score[item.attitude],
+        response: rate2Score[item.response],
+        power: rate2Score[item.power],
         usertype: this.title.slice(0, 5),
         isgm: 2, // 客户评价
         sportid: this.$store.state.voteType,
@@ -106,12 +140,13 @@ let vote = {
         votetime: voteTime,
         uid: this.$store.state.custom.uid
       }));
+
       // console.log(votes);
       // return;
 
       let {
         data: [res]
-      } = await db.addCbpcPerformanceByCustomer(votes).catch(e => {
+      } = await db.addCbpcPerformancePrintMachinecheck(votes).catch(e => {
         this.$message({
           message: "数据提交失败",
           type: "error"
@@ -152,7 +187,9 @@ let vote = {
     let userInfo = {
       limit: {},
       data: custom.users.map(name => ({
-        value: 2,
+        attitude: 2,
+        response: 2,
+        power: 2,
         desc: "",
         dept: custom.providerName,
         name
@@ -175,5 +212,19 @@ export default vote;
 .desc {
   font-weight: 200;
   font-size: 14px;
+}
+.vote {
+  .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 20px;
+    font-size: 15px;
+    margin-bottom: 8px;
+    .type {
+      padding-right: 15px;
+      font-size: 13px;
+    }
+  }
 }
 </style>

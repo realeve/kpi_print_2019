@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2 class="title">月度绩效测评得分</h2>
+    <p style="text-align;">建议横屏观看，点击得分维度自动排序(优秀:10分,良好:8分,较好:6分,较差:4分)</p>
     <el-table
       :data="tableData"
       stripe
@@ -19,16 +20,37 @@
       <el-table-column
         prop="leader"
         label="领导评分"
+        sortable
       >
       </el-table-column>
       <el-table-column
         prop="other"
         label="互评得分"
+        sortable
       >
       </el-table-column>
       <el-table-column
         prop="customer"
-        label="客户得分"
+        label="客户评分"
+        sortable
+      >
+      </el-table-column>
+      <el-table-column
+        prop="attitude"
+        label="服务态度"
+        sortable
+      >
+      </el-table-column>
+      <el-table-column
+        prop="response"
+        label="响应时间"
+        sortable
+      >
+      </el-table-column>
+      <el-table-column
+        prop="power"
+        label="业务能力"
+        sortable
       >
       </el-table-column>
     </el-table>
@@ -55,29 +77,27 @@
       >
       </el-table-column>
       <el-table-column
-        v-if="type==0"
-        prop="dpt"
-        label="部门"
-      >
-      </el-table-column>
-      <el-table-column
         prop="score5"
         label="较差"
+        sortable
       >
       </el-table-column>
       <el-table-column
         prop="score7"
         label="较好"
+        sortable
       >
       </el-table-column>
       <el-table-column
         prop="score8"
         label="良好"
+        sortable
       >
       </el-table-column>
       <el-table-column
         prop="score10"
         label="优秀"
+        sortable
       >
       </el-table-column>
       <el-table-column

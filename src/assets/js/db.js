@@ -32,7 +32,7 @@ export const addCbpcPerformancePrint = (values) =>
  *
  *   @database: { 微信开发 }
  *   @desc:     { 批量客户满意度投票 } */
-export const addCbpcPerformanceByCustomer = (values) =>
+export const addCbpcPerformancePrintMachinecheck = (values) =>
   axios({
     method: 'post',
     data: {
